@@ -1,0 +1,1 @@
+{"status":500,"error":{"code":"ER_CON_COUNT_ERROR","errno":1040,"sqlMessage":"Too many connections","fatal":true},"response":null}
