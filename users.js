@@ -3,7 +3,8 @@ var router = express.Router();
 // let url ="http://localhost:3000/download/";
 // let url ="http://192.168.100.5:3000/download/";
 // let url ="http://192.168.88.135:4000/download/";
-let url ="http://open.katadata.co.id:4000/download/";
+let url ="http://192.168.88.135:3000/download/";
+// let url ="http://open.katadata.co.id:4000/download/";
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	// connection.query('SELECT * from users', function (error, results, fields) {
