@@ -3,7 +3,8 @@ var app = express()
 var mysql= require('mysql');
 const fs = require('fs');
 var users = require('./users');
-var ulil = require("./router")
+// var ulil = require("./router")
+var router = require("./router")
 
 
 
@@ -18,7 +19,8 @@ app.use(function(req, res, next){
 	next();
 });
 app.use('/users', users);
-app.use("/download", ulil);
+app.use("/download", router);
+// app.use("/download", ulil);
 
 app.listen(4000)
 /////////////////////////////////////////////////////////////////////////
