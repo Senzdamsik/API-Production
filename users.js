@@ -5,27 +5,36 @@ var router = express.Router();
 // let url ="http://192.168.88.135:4000/download/";
 let url ="http://192.168.88.135:3000/download/";
 // let url ="http://open.katadata.co.id:4000/download/";
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-	// connection.query('SELECT * from users', function (error, results, fields) {
-	connection.query('SELECT id, id_nama_data, data_x, data_y from data limit 100', function (error, results, fields) {
 
+
+router.get('/:awal-:akhir', function(req, res, next) {
+	var awalx = req.params.awal;
+	var akhirx = req.params.akhir;
+	connection.query('SELECT id from data order by id desc limit '+awalx+","+akhirx, function (error, results, fields) {
+	
 		if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
-	  		//If there is error, we send the error in the error section with 500 status
 	  	} else {
-			//   res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-            const arr = [];
-            let num = 0 ;
-			// console.log(results[0].id);
-            for (data in results){
-                arr[num] = url + results[num].id;
-                num ++;
-            }
-            // console.log(arr);
-            res.send(JSON.stringify({"status": 200, "error": null, "response": arr}));
-			  //If there is no error, all is good and response is 200OK.
-			//   console.log(results)
+            var arr = []
+            for (i in results){
+                arr[i] = url + results[i].id
+			}
+
+			No = []
+			for (j =0; j < 20; j++){
+				No.push(j+1)
+			}
+
+			kumpulan = {}
+			for (k =0; k < 20; k++){
+				kumpulan[No[k]] = arr[k]
+			}
+			
+			lanjut = "http://192.168.88.135:3000/users/"+String(parseInt(awalx)+20)+"-"+String(parseInt(akhirx)+20)
+
+			res.send(JSON.stringify({"Error": null, "Response": kumpulan, "Next": lanjut}));
+
+
 	  	}
   	});
 });

@@ -7,8 +7,9 @@ var DataFrame = require('dataframe-js').DataFrame;
 /* GET users listing. */
 router.get('/:id', function(req, res, next) {
     let id = req.params.id;
-	// connection.query('SELECT * from users', function (error, results, fields) {
-	connection.query('SELECT id, id_nama_data, data_x, data_y from data WHERE id='+id, function (error, results, fields) {
+	// connection.query('SELECT id, id_nama_data, data_x, data_y from data WHERE id='+id, function (error, results, fields) {
+    connection.query('SELECT id, id_nama_data, data_x, data_y from data WHERE id='+id, function (error, results, fields) {
+    
 		if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
 	  		//If there is error, we send the error in the error section with 500 status
