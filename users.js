@@ -3,8 +3,10 @@ var router = express.Router();
 // let url ="http://localhost:3000/download/";
 // let url ="http://192.168.100.5:3000/download/";
 // let url ="http://192.168.88.135:4000/download/";
-let url ="http://192.168.88.135:3000/download/";
-// let url ="http://open.katadata.co.id:4000/download/";
+// let url ="http://192.168.88.135:3000/download/";
+// let url ="http://192.168.1.7:3000/download/";
+
+let url ="http://open.katadata.co.id:3000/download/";
 
 
 router.get('/:awal-:akhir', function(req, res, next) {
@@ -30,7 +32,7 @@ router.get('/:awal-:akhir', function(req, res, next) {
 				kumpulan[No[k]] = arr[k]
 			}
 			
-			lanjut = "http://192.168.88.135:3000/users/"+String(parseInt(awalx)+20)+"-"+String(parseInt(akhirx)+20)
+			lanjut = "http://open.katadata.co.id:3000/users/"+String(parseInt(awalx)+20)+"-"+String(parseInt(akhirx)+20)
 
 			res.send(JSON.stringify({"Error": null, "Response": kumpulan, "Next": lanjut}));
 
