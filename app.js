@@ -12,8 +12,8 @@ app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 	  	host     : 'localhost',
 	  	user     : 'root',
-      database : 'databoks',
-      password: "kduk2017"
+      database : 'new_schema',
+      password: "123456"
 	});
 	connection.connect();
 	next();
