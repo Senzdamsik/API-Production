@@ -10,7 +10,8 @@ let url ="http://192.168.88.135:3000/download/";
 
 router.get('/:awal', function(req, res, next) {
 	var awalx = req.params.awal;
-	connection.query(' select data.id, nama_data.nama as nama_data, perusahaan.nama as instansi, data.description as deskripsi, data.sumber as sumber, data.date_created as date_created,data.date_modified as date_modified, users.username as nama_pengunggah, users.email as email from data, nama_data, perusahaan, users where nama_data.id = data.id_nama_data and perusahaan.id = data.instansi and users.id = data.user_created order by data.id asc limit '+awalx+", 20", function (error, results, fields)				 
+	connection.query('select data.id, nama_data.nama as nama_data, ' +
+	                 'perusahaan.nama as instansi, data.description as deskripsi, data.sumber as sumber, data.date_created as date_created,data.date_modified as date_modified, users.username as nama_pengunggah, users.email as email from data, nama_data, perusahaan, users where nama_data.id = data.id_nama_data and perusahaan.id = data.instansi and users.id = data.user_created order by data.id asc limit '+awalx+", 20", function (error, results, fields)				 
 					 { 
 	
 		if(error){
@@ -79,8 +80,6 @@ router.get('/:awal', function(req, res, next) {
 				kumpulan[No[z_]]["Email Pengunggah"] = String(emailx[z_])
 				kumpulan[No[z_]]["Sumber"] = String(sumberx[z_])
 				kumpulan[No[z_]]["Deskripsi"] = String(desx[z_])
-				
-
 
 			}
 
