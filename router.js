@@ -24,6 +24,7 @@ router.get('/:id', function(req, res, next) {
             
             try {   
                 df = Object.values(results[0])
+                console.log(results)
 
                 data_x1 = df[2].split(",")
                 var tampung_x = []
@@ -64,19 +65,35 @@ router.get('/:id', function(req, res, next) {
 
 
                 const lf = new DataFrame({
-                    column1: tampung_id, // <------ A column
-                    column2: tampung_nama_data,
-                    column3: tampung_x,
-                    column4: tampung_y,
-                    column5: tampung_nama_produk,
-                    column6: tampung_item,
-                    column7: tampung_negara,
-                    column8: tampung_provinsi,
-                    column9: tampung_kota,
-                    column10: tampung_satuan,
-                    column11: tampung_sumber
+                    column1: tampung_nama_data,
+                    column2: tampung_x,
+                    column3: tampung_y,
+                    column4: tampung_nama_produk,
+                    column5: tampung_item,
+                    column6: tampung_negara,
+                    column7: tampung_provinsi,
+                    column8: tampung_kota,
+                    column9: tampung_satuan,
+                    column10: tampung_sumber
+                    
 
-                }, ['Id', 'Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
+
+
+
+                    // column1: tampung_id, // <------ A column
+                    // column2: tampung_nama_data,
+                    // column3: tampung_x,
+                    // column4: tampung_y,
+                    // column5: tampung_nama_produk,
+                    // column6: tampung_item,
+                    // column7: tampung_negara,
+                    // column8: tampung_provinsi,
+                    // column9: tampung_kota,
+                    // column10: tampung_satuan,
+                    // column11: tampung_sumber
+
+                   }, ['Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
+                // }, ['Id', 'Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
 
                 // ff = lf.restructure(['No', 'Nama Data', 'Data x', 'Data y', 'Nama Produk'])
 

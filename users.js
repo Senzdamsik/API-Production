@@ -10,9 +10,26 @@ let url ="http://192.168.88.135:3000/download/";
 
 router.get('/:awal', function(req, res, next) {
 	var awalx = req.params.awal;
+
 	connection.query('select data.id, nama_data.nama as nama_data, ' +
-	                 'perusahaan.nama as instansi, data.description as deskripsi, data.sumber as sumber, data.date_created as date_created,data.date_modified as date_modified, users.username as nama_pengunggah, users.email as email from data, nama_data, perusahaan, users where nama_data.id = data.id_nama_data and perusahaan.id = data.instansi and users.id = data.user_created order by data.id asc limit '+awalx+", 20", function (error, results, fields)				 
-					 { 
+	                 'perusahaan.nama as instansi, nama_data.description as deskripsi, ' + 
+					 'data.sumber as sumber, data.date_created as date_created, ' +
+					 'data.date_modified as date_modified, (select username from users ' +
+					 'where users.id = data.user_created)  as nama_pengunggah, users.email ' +
+					 'as email, (select username from users where users.id = data.user_modified) ' + 
+					 'as nama_pengubah, tabel2.nama_tag as nama_tag , industri.nama as kategori ' +
+					 'from data left join nama_data on nama_data.id = data.id_nama_data left join ' +
+					 'perusahaan on perusahaan.id = data.instansi left join users on users.id ' +
+					 '= data.user_created left join (select tabel.id, GROUP_CONCAT(tabel.nama_tag ' +
+					 'separator '+"','"+') as nama_tag from (select data.id, tagdata.nama as nama_tag ' +
+					 'from data left join rel_data_tagdata on rel_data_tagdata.id_data = ' +
+					 'data.id left join tagdata on tagdata.id = rel_data_tagdata.id_tag) ' +
+					 'as tabel group by tabel.id) as tabel2 on tabel2.id = data.id' +
+					 ' left join industri on industri.id = data.id_industri order ' +
+					 'by data.id desc limit '+awalx+", 20", 
+					  function (error, results, fields)				 
+														
+	{ 
 	
 		if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
@@ -55,17 +72,45 @@ router.get('/:awal', function(req, res, next) {
 
 			var desx = []
             for (h_ in results){
-                desx[h_] = results[h_].deskripsi
+				desx[h_] = results[h_].deskripsi
 			}
 
 			var sumberx = []
             for (i_ in results){
-                sumberx[i_] = results[i_].sumber
+				sumberx_split = results[i_].sumber.split(",")
+                sumberx[i_] = sumberx_split[i_]
 			}
 
 			var emailx = []
             for (j_ in results){
                 emailx[j_] = results[j_].email
+			}
+
+			var nama_pengubahx = []
+            for (l_ in results){
+                nama_pengubahx[l_] = results[l_].nama_pengubah
+			}
+
+
+			var tag = []
+            for (m_ in results){
+                tag[m_] = results[m_].nama_tag
+			}
+
+			var kategori = []
+            for (n_ in results){
+                kategori[n_] = results[n_].kategori
+			}
+
+
+			/////////////////////////////////////////////////////////////////////////
+			//Cleaning
+
+			var desx2 = []
+            for (k_ in desx){
+				var ubah =  desx[k_]
+				desx2[k_] = ubah.replace("<p>", "");
+				desx2[k_] = desx2[k_].replace("</p>", "");
 			}
 
 			kumpulan = {}
@@ -78,8 +123,22 @@ router.get('/:awal', function(req, res, next) {
 				kumpulan[No[z_]]["Date_modified"] = String(date_modifiedx[z_])
 				kumpulan[No[z_]]["Nama Pengunggah"] = String(nama_pengunggahx[z_])
 				kumpulan[No[z_]]["Email Pengunggah"] = String(emailx[z_])
+				kumpulan[No[z_]]["Nama Pengubah"] = String(nama_pengubahx[z_])
 				kumpulan[No[z_]]["Sumber"] = String(sumberx[z_])
-				kumpulan[No[z_]]["Deskripsi"] = String(desx[z_])
+				kumpulan[No[z_]]["Deskripsi"] = String(desx2[z_])
+				kumpulan[No[z_]]["Kategori"] = String(kategori[z_])
+
+				var tagx = tag[z_].split(",")
+				for(var i = 0; i < tagx.length; i++){
+					kumpulan[No[z_]]["Nama Tag"] = {}
+					if ( tagx[i] == null ) {
+						kumpulan[No[z_]]["Nama Tag"][String(i)] = String("kosong")
+					}
+					else {kumpulan[No[z_]]["Nama Tag"][String(i)] = String(tagx[i])
+					}
+					
+				}
+
 
 			}
 
@@ -87,10 +146,8 @@ router.get('/:awal', function(req, res, next) {
 			lanjut = "http://192.168.88.135:3000/users/"+String(parseInt(awalx)+20)
 
 			res.send(JSON.stringify({"Response": kumpulan, "Next": lanjut}));
-			// res.send(JSON.stringify({"Response": kumpulan, "Next": lanjut}));
 
-
-	  	}
+		}		
   	});
 });
 
