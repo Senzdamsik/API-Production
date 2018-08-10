@@ -26,7 +26,7 @@ router.get('/:awal', function(req, res, next) {
 					 'data.id left join tagdata on tagdata.id = rel_data_tagdata.id_tag) ' +
 					 'as tabel group by tabel.id) as tabel2 on tabel2.id = data.id' +
 					 ' left join industri on industri.id = data.id_industri order ' +
-					 'by data.id desc limit '+awalx+", 20", 
+					 'by data.date_modified desc limit '+awalx+", 20", 
 					  function (error, results, fields)				 
 														
 	{ 
@@ -128,16 +128,14 @@ router.get('/:awal', function(req, res, next) {
 				kumpulan[No[z_]]["Deskripsi"] = String(desx2[z_])
 				kumpulan[No[z_]]["Kategori"] = String(kategori[z_])
 
-				var tagx = tag[z_].split(",")
-				for(var i = 0; i < tagx.length; i++){
+				try{
+					var tagx = tag[z_].split(",")
 					kumpulan[No[z_]]["Nama Tag"] = {}
-					if ( tagx[i] == null ) {
-						kumpulan[No[z_]]["Nama Tag"][String(i)] = String("kosong")
+					for(var i = 0; i < tagx.length; i++){					
+						kumpulan[No[z_]]["Nama Tag"][String(i+1)] = String(tagx[i])
 					}
-					else {kumpulan[No[z_]]["Nama Tag"][String(i)] = String(tagx[i])
-					}
-					
 				}
+				catch(err){}
 
 
 			}
