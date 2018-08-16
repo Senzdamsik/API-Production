@@ -80,7 +80,7 @@ router.get('/:awal', function(req, res, next) {
 				sumberx_split = results[i_].sumber.split(",")
                 sumberx[i_] = sumberx_split[i_]
 			}
-
+			
 			var emailx = []
             for (j_ in results){
                 emailx[j_] = results[j_].email

@@ -24,7 +24,6 @@ router.get('/:id', function(req, res, next) {
             
             try {   
                 df = Object.values(results[0])
-                console.log(results)
 
                 data_x1 = df[2].split(",")
                 var tampung_x = []
@@ -60,8 +59,19 @@ router.get('/:id', function(req, res, next) {
                 var tampung_satuan = []
                 for(var s = 0; s < data_x1.length; s++){tampung_satuan.push(df[9])}
 
+                // var tampung_sumber = []
+                // for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(df[10])}
+
+                // var sumberx = []
+                // for (i_ in results){
+                //     sumberx_split = results[i_].sumber.split(",")
+                //     sumberx[i_] = sumberx_split[i_]
+			    // }
+
                 var tampung_sumber = []
-                for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(df[10])}
+                var hasil_split = df[10].split(",")
+                for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(hasil_split[0])}
+                
 
 
                 const lf = new DataFrame({
@@ -75,22 +85,7 @@ router.get('/:id', function(req, res, next) {
                     column8: tampung_kota,
                     column9: tampung_satuan,
                     column10: tampung_sumber
-                    
 
-
-
-
-                    // column1: tampung_id, // <------ A column
-                    // column2: tampung_nama_data,
-                    // column3: tampung_x,
-                    // column4: tampung_y,
-                    // column5: tampung_nama_produk,
-                    // column6: tampung_item,
-                    // column7: tampung_negara,
-                    // column8: tampung_provinsi,
-                    // column9: tampung_kota,
-                    // column10: tampung_satuan,
-                    // column11: tampung_sumber
 
                    }, ['Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
                 // }, ['Id', 'Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
