@@ -13,7 +13,7 @@ app.use(function(req, res, next){
 	  	host     : 'localhost',
 	  	user     : 'root',
       database : 'new_schema',
-      password: "123456"
+      password: ""
 	});
 	connection.connect();
 	next();

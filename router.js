@@ -1,30 +1,37 @@
 var express = require('express');
 var router = express.Router();
-const json2csv = require('json2csv').parse;
-const fs = require('fs');
+var fs = require('fs');
 var DataFrame = require('dataframe-js').DataFrame;
+var dataForge = require('data-forge');
+
+var ExportToCsv = require('export-to-csv');
+
 
 /* GET users listing. */
-router.get('/:id', function(req, res, next) {
-    let id = req.params.id;
+router.get('/:nama_data1', function(req, res, next) {
+    var nama_data2 = req.params.nama_data1;
+    var nama_data3 = nama_data2.split("-").join(" ")
+    var nama_data4 = String("'"+nama_data3+"'")
     var query = 'select a.id, b.nama as nama_data, a.data_x as data_x, a.data_y as data_y, ' +
                 'c.nama as nama_produk, d.nama as nama_item, e.nama as nama_negara, ' +
                 'f.nama as nama_provinsi, g.nama as nama_kota, a.satuan as satuan, ' +
                 'a.sumber as sumber from data a left join nama_data b ' +
                 'ON a.id_nama_data = b.id left join produk c ON a.id_produk=c.id left join item d ' +
                 'ON a.id_item = d.id left join negara e ON a.id_negara = e.id left join provinsi f ' +
-                'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE a.id='
-    // var query = 'SELECT id, id_nama_data, data_x, data_y from data WHERE id='
+                'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama = '
+    
 
-    connection.query(query+id, function (error, results, fields) {
+    connection.query(query+nama_data4, function (error, results, fields) {
     
 		if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
 	  	}else{
             
-            try {   
-                df = Object.values(results[0])
-
+            try {
+                var tampung_sementara = []
+                for(var aa = 0; aa < results.length; aa++){   
+                
+                df = Object.values(results[aa])
                 data_x1 = df[2].split(",")
                 var tampung_x = []
                 for(var i = 0; i < data_x1.length; i++){tampung_x.push(data_x1[i])}
@@ -59,94 +66,82 @@ router.get('/:id', function(req, res, next) {
                 var tampung_satuan = []
                 for(var s = 0; s < data_x1.length; s++){tampung_satuan.push(df[9])}
 
-                // var tampung_sumber = []
-                // for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(df[10])}
-
-                // var sumberx = []
-                // for (i_ in results){
-                //     sumberx_split = results[i_].sumber.split(",")
-                //     sumberx[i_] = sumberx_split[i_]
-			    // }
 
                 var tampung_sumber = []
                 var hasil_split = df[10].split(",")
                 for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(hasil_split[0])}
                 
 
+                var lf = new dataForge.DataFrame({
+                    columns: {
+                        Nama_Data: tampung_nama_data,
+                        Data_X: tampung_x,
+                        Data_Y: tampung_y,
+                        Nama_Produk: tampung_nama_produk,
+                        Item: tampung_item,
+                        Negara: tampung_negara,
+                        Provinsi: tampung_provinsi,
+                        Kota: tampung_kota,
+                        Satuan: tampung_satuan,
+                        Sumber: tampung_sumber,
+                    },
+                });
 
-                const lf = new DataFrame({
-                    column1: tampung_nama_data,
-                    column2: tampung_x,
-                    column3: tampung_y,
-                    column4: tampung_nama_produk,
-                    column5: tampung_item,
-                    column6: tampung_negara,
-                    column7: tampung_provinsi,
-                    column8: tampung_kota,
-                    column9: tampung_satuan,
-                    column10: tampung_sumber
+                // var lf = new DataFrame({
+                //     column1: tampung_nama_data,
+                //     column2: tampung_x,
+                //     column3: tampung_y,
+                //     column4: tampung_nama_produk,
+                //     column5: tampung_item,
+                //     column6: tampung_negara,
+                //     column7: tampung_provinsi,
+                //     column8: tampung_kota,
+                //     column9: tampung_satuan,
+                //     column10: tampung_sumber
 
 
-                   }, ['Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
-                // }, ['Id', 'Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
+                //    }, ['Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
 
-                // ff = lf.restructure(['No', 'Nama Data', 'Data x', 'Data y', 'Nama Produk'])
+                tampung_sementara.push(lf)
+                }
 
-                lf.toCSV(true, 'databoks.csv');
-                res.download('databoks.csv')
-                
-                
+                var df0 = new dataForge.DataFrame({
+                    columns: {
+                        Nama_Data: [],
+                        Data_X: [],
+                        Data_Y: [],
+                        Nama_Produk: [],
+                        Item: [],
+                        Negara: [],
+                        Provinsi: [],
+                        Kota: [],
+                        Satuan: [],
+                        Sumber: [],
+                    },
+                });
 
 
-                // var fields = ["id", "id_nama_data", "data_x", "data_y"];
-                // const opts = { fields };
-                // const hasilcsv = json2csv(results, opts);
-                // console.log(hasilcsv);
-                
-                // fs.writeFile('databoks.csv', hasilcsv, function(err) {
-                //     res.download('databoks.csv')
-                // }) 
+                var haha = df0.concat(tampung_sementara)
+                var lala = haha.toCSV(true, 'databoks.csv')
+
+                fs.writeFile('/home/fakhri/Downloads/file.csv', lala, function(err) {
+                    if (err) throw err;
+                     res.send();
+                  });
+
+
+                // res.download('databoks.csv')
+ 
 
             } 
             
             catch (err) {
                 console.error(err);
-            }       
+            } 
+            
         }
       });  
 });
 
-// console.log(results)
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-// try {            
-//     const opts = {};
-//     const hasilcsv = json2csv(results);
-//     fs.writeFile('file.csv', hasilcsv, function(err) { 
-//     })
-//   } catch (err) {
-//     console.error(err);
-//   }
-//   res.download('/home/fakhri/Downloads/file.csv');
-
-
-// var fields = ["id", "id_nama_data", "data_x", "data_y"];
-//             const opts = { fields };
-//             const hasilcsv = json2csv(results, opts);
-//             console.log(hasilcsv);
-            
-//             fs.writeFile('file.csv', hasilcsv, function(err) {
-//               if (err) throw err;
-//               console.log("file saved")})   
-            
-//               res.download('file.csv') 
