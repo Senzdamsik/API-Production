@@ -87,21 +87,6 @@ router.get('/:nama_data1', function(req, res, next) {
                     },
                 });
 
-                // var lf = new DataFrame({
-                //     column1: tampung_nama_data,
-                //     column2: tampung_x,
-                //     column3: tampung_y,
-                //     column4: tampung_nama_produk,
-                //     column5: tampung_item,
-                //     column6: tampung_negara,
-                //     column7: tampung_provinsi,
-                //     column8: tampung_kota,
-                //     column9: tampung_satuan,
-                //     column10: tampung_sumber
-
-
-                //    }, ['Nama Data', 'Data X', 'Data Y', 'Nama Produk', 'Item', 'Negara', 'Provinsi', 'Kota', 'satuan', 'Sumber']);
-
                 tampung_sementara.push(lf)
                 }
 
@@ -122,23 +107,18 @@ router.get('/:nama_data1', function(req, res, next) {
 
 
                 var haha = df0.concat(tampung_sementara)
-                var lala = haha.toCSV(true, 'databoks.csv')
+                var lala = haha.toCSV()
 
-                fs.writeFile('/home/fakhri/Downloads/file.csv', lala, function(err) {
+                fs.writeFile('databoks.csv', lala, function(err) {
                     if (err) throw err;
-                     res.send();
+                     res.download('databoks.csv');
                   });
-
-
-                // res.download('databoks.csv')
  
-
             } 
             
             catch (err) {
                 console.error(err);
-            } 
-            
+            }           
         }
       });  
 });
