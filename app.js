@@ -12,7 +12,7 @@ app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 	  	host     : 'localhost',
 	  	user     : 'root',
-      database : 'new_schema',
+      database : 'SQL baru (Okt 2018)',
       password: ""
 	});
 	connection.connect();

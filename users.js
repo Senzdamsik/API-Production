@@ -12,22 +12,34 @@ var url ="http://192.168.88.135:3000/download/"
 router.get('/:awal', function(req, res, next) {
 	var awalx = req.params.awal;
 
-	connection.query('select * from (select data.id, nama_data.nama as nama_data, ' +
-					 'perusahaan.nama as instansi, nama_data.description as deskripsi, ' + 
-					 'data.sumber as sumber, data.date_created as date_created, ' +
-					 'data.date_modified as date_modified, (select username from users ' + 
-					 'where users.id = data.user_created)  as nama_pengunggah, users.email ' +
-					 'as email, (select username from users where users.id = data.user_modified) ' +  
-					 'as nama_pengubah, tabel2.nama_tag as nama_tag , industri.nama as kategori ' +
-					 'from data left join nama_data on nama_data.id = data.id_nama_data left join ' +
-					 'perusahaan on perusahaan.id = data.instansi left join users on users.id ' +
-					 '= data.user_created left join (select tabel.id, GROUP_CONCAT(tabel.nama_tag ' +
-					 'separator '+"','"+') as nama_tag from (select data.id, tagdata.nama as nama_tag ' +
-					 'from data left join rel_data_tagdata on rel_data_tagdata.id_data = ' +
-					 'data.id left join tagdata on tagdata.id = rel_data_tagdata.id_tag) ' +
-					 'as tabel group by tabel.id) as tabel2 on tabel2.id = data.id ' +
-					 'left join industri on industri.id = data.id_industri group by nama_data.nama) as gabungan_nama_data ' +
-					 'order by date_modified desc limit '+awalx+", 20", function (error, results, fields)				 
+	connection.query('select * from (select gabungan_nama_data.id_nama_data, gabungan_nama_data.nama_data, ' +
+		'gabungan_nama_data.instansi, gabungan_nama_data.deskripsi, gabungan_nama_data.sumber, ' +
+		'gabungan_nama_data.date_created, gabungan_nama_data.date_modified, ' +
+		'gabungan_nama_data.nama_pengunggah, gabungan_nama_data.email, ' +
+		'gabungan_nama_data.nama_pengubah, gabungan_nama_data.nama_tag, ' +
+		'gabungan_nama_data.kategori, nama_data.nama_kelompok as nama_kelompok_data from ' +
+		
+		'(select data.id, nama_data.id as id_nama_data, nama_data.nama as nama_data, ' +
+		'perusahaan.nama as instansi, nama_data.description as deskripsi,  ' +
+		'data.sumber as sumber, data.date_created as date_created, ' +
+		'data.date_modified as date_modified, (select username from users ' +  
+		'where users.id = data.user_created)  as nama_pengunggah, users.email ' + 
+		'as email, (select username from users where users.id = data.user_modified) ' +   
+		'as nama_pengubah, tabel2.nama_tag as nama_tag , industri.nama as kategori ' +
+		'from data left join nama_data on nama_data.id = data.id_nama_data left join ' +
+		'perusahaan on perusahaan.id = data.instansi left join users on users.id ' +
+		'= data.user_created left join (select tabel.id, GROUP_CONCAT(tabel.nama_tag ' + 
+		'separator '+"','"+') as nama_tag from (select data.id, tagdata.nama as nama_tag ' +
+		'from data left join rel_data_tagdata on rel_data_tagdata.id_data = ' +
+		'data.id left join tagdata on tagdata.id = rel_data_tagdata.id_tag) ' +
+		'as tabel group by tabel.id) as tabel2 on tabel2.id = data.id ' +
+		'left join industri on industri.id = data.id_industri group by nama_data.nama) as gabungan_nama_data ' +
+		
+		'left join nama_data ' +
+		'on gabungan_nama_data.id_nama_data = nama_data.id) as gabungan_kelompok_nama_data ' +
+		
+		'group by nama_kelompok_data order by date_modified desc ' +
+		' limit '+awalx+", 5", function (error, results, fields)				 
 														
 	{ 
 	
@@ -37,7 +49,7 @@ router.get('/:awal', function(req, res, next) {
 
 			var link = []
             for (a_ in results){
-                link[a_] = url + results[a_].nama_data.split(" ").join('-')
+                link[a_] = url + results[a_].nama_kelompok_data.split(" ").join('-')
 			}
 
 			No = []
@@ -60,9 +72,9 @@ router.get('/:awal', function(req, res, next) {
                 nama_pengunggahx[e_] = results[e_].nama_pengunggah
 			}
 
-			var nama_datax = []
+			var nama_kelompok_datax = []
             for (f_ in results){
-                nama_datax[f_] = results[f_].nama_data
+                nama_kelompok_datax[f_] = results[f_].nama_kelompok_data
 			}
 
 			var nama_instansix = []
@@ -117,7 +129,7 @@ router.get('/:awal', function(req, res, next) {
 			for (z_ = 0; z_ < 20; z_++){
 				kumpulan[No[z_]] = {}
 				kumpulan[No[z_]]["Link"] = link[z_]
-				kumpulan[No[z_]]["Nama Data"] = String(nama_datax[z_])
+				kumpulan[No[z_]]["Nama Kelompok Data"] = String(nama_kelompok_datax[z_])
 				kumpulan[No[z_]]["Instansi"] = String(nama_instansix[z_])
 				kumpulan[No[z_]]["Date_created"] = String(date_createdx[z_])
 				kumpulan[No[z_]]["Date_modified"] = String(date_modifiedx[z_])
