@@ -15,7 +15,7 @@ router.get('/:nama_kelompok_data1', function(req, res, next) {
                 'a.sumber as sumber from data a left join nama_data b ' +
                 'ON a.id_nama_data = b.id left join produk c ON a.id_produk=c.id left join item d ' +
                 'ON a.id_item = d.id left join negara e ON a.id_negara = e.id left join provinsi f ' +
-                'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama = '
+                'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama_kelompok = '
     
 
     connection.query(query+nama_data4, function (error, results, fields) {
