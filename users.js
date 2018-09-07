@@ -46,11 +46,13 @@ router.get('/:awal', function(req, res, next) {
 		if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
 	  	} else {
-
+			
+			
 			var link = []
-            for (a_ in results){
-                link[a_] = url + results[a_].nama_kelompok_data.split(" ").join('-')
+			for (a_ in results){
+				link[a_] = url + results[a_].nama_kelompok_data.split(" ").join('-')
 			}
+			
 
 			No = []
 			for (b_ =0; b_ < 20; b_++){
@@ -118,12 +120,15 @@ router.get('/:awal', function(req, res, next) {
 			/////////////////////////////////////////////////////////////////////////
 			//Cleaning
 
+			
 			var desx2 = []
-            for (k_ in desx){
+			for (k_ in desx){
 				var ubah =  desx[k_]
 				desx2[k_] = ubah.replace("<p>", "");
 				desx2[k_] = desx2[k_].replace("</p>", "");
 			}
+			
+			
 
 			kumpulan = {}
 			for (z_ = 0; z_ < 20; z_++){

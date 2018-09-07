@@ -1,12 +1,9 @@
 var express = require('express')
 var app = express()
 var mysql= require('mysql');
-const fs = require('fs');
+
 var users = require('./users');
-// var ulil = require("./router")
-var router = require("./router")
-
-
+var download = require("./download")
 
 app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
@@ -18,12 +15,104 @@ app.use(function(req, res, next){
 	connection.connect();
 	next();
 });
+
 app.use('/users', users);
-app.use("/download", router);
-// app.use("/download", ulil);
+app.use("/download", download);
+
 
 app.listen(3000)
-/////////////////////////////////////////////////////////////////////////
+	
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
