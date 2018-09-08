@@ -8,20 +8,16 @@ var dataForge = require('data-forge');
 router.get('/', function(req, res, next) {
 
     var datax = req.query.data;
+
     var filterx = req.query.filters
+    var filter_pecah  = filterx.split("|")
 
-
-
-
-
+    // console.log(filterx)
 
     if (filterx){
     
-        try{
-            var filterx1 = filterx.split(":")
-        }
-        catch(err){}
-        // console.log(filterx1[0])
+        var filter_pecahx = filter_pecah[0].split(":")
+        filter_pecahx_1 = filter_pecahx[1].split("-").join(" ")
 
         var nama_data2 = datax;
         var nama_data3 = nama_data2.split("-").join(" ")
@@ -36,7 +32,7 @@ router.get('/', function(req, res, next) {
         'ON a.id_item = d.id left join negara e ON a.id_negara = e.id left join provinsi f ' +
         'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama_kelompok = '+String(nama_data4)+') as seluruh ' + 
         // , function (error, results, fields) {
-        'where '+String(filterx1[0])+' = '+"'"+String(filterx1[1])+"'" , function (error, results, fields) {
+        'where '+String(filter_pecahx[0])+' = '+"'"+String(filter_pecahx_1)+"'" , function (error, results, fields) {
 
             if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
@@ -254,21 +250,6 @@ router.get('/', function(req, res, next) {
         });  
     
     }   
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
 
 
 
