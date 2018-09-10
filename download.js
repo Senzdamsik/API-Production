@@ -4,24 +4,40 @@ var fs = require('fs');
 var DataFrame = require('dataframe-js').DataFrame;
 var dataForge = require('data-forge');
 
-/* GET users listing. */
+
 router.get('/', function(req, res, next) {
 
+    // var datax = req.body.data;
+    // var filterx = req.body.filters
+
     var datax = req.query.data;
-
     var filterx = req.query.filters
-    var filter_pecah  = filterx.split("|")
-
-    // console.log(filterx)
 
     if (filterx){
-    
-        var filter_pecahx = filter_pecah[0].split(":")
-        filter_pecahx_1 = filter_pecahx[1].split("-").join(" ")
+
+        var filter_pecah  = filterx.split("|")
+        var filter_jumlah = filter_pecah.length
+
+        var filter_kiri = []
+        var filter_kanan = []
+
+        for(var i = 0; i < filter_jumlah; i++){
+        var filter_pecahx = filter_pecah[i].split(":")
+            filter_kiri.push(filter_pecahx[0])
+            filter_kanan.push(filter_pecahx[1].split("-").join(" "))
+        }
 
         var nama_data2 = datax;
         var nama_data3 = nama_data2.split("-").join(" ")
         var nama_data4 = String("'"+nama_data3+"'")
+
+        if(filter_jumlah == 1){
+            kondisi = String(filter_kiri[0])+' = '+"'"+String(filter_kanan[0])+"'"
+        } else if(filter_jumlah == 2){
+            kondisi = String(filter_kiri[0])+' = '+"'"+String(filter_kanan[0])+"'"
+            +" and "+String(filter_kiri[1])+' = '+"'"+String(filter_kanan[1])+"'"
+        }
+
 
         connection.query('select id, Nama_Data, Waktu, Nilai, Nama_Produk, Item, Negara, Provinsi, ' +
         'Kota, Satuan, Sumber from (select a.id as id, b.nama as Nama_Data, a.data_x as Waktu, a.data_y as Nilai, ' +
@@ -31,8 +47,8 @@ router.get('/', function(req, res, next) {
         'ON a.id_nama_data = b.id left join produk c ON a.id_produk=c.id left join item d ' +
         'ON a.id_item = d.id left join negara e ON a.id_negara = e.id left join provinsi f ' +
         'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama_kelompok = '+String(nama_data4)+') as seluruh ' + 
-        // , function (error, results, fields) {
-        'where '+String(filter_pecahx[0])+' = '+"'"+String(filter_pecahx_1)+"'" , function (error, results, fields) {
+        'where '+kondisi
+         , function (error, results, fields) {
 
             if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
@@ -135,7 +151,7 @@ router.get('/', function(req, res, next) {
     }
 
     else{
-
+        
         var nama_data2 = datax;
         var nama_data3 = nama_data2.split("-").join(" ")
         var nama_data4 = String("'"+nama_data3+"'")
@@ -147,8 +163,8 @@ router.get('/', function(req, res, next) {
         'a.sumber as Sumber from data a left join nama_data b ' +
         'ON a.id_nama_data = b.id left join produk c ON a.id_produk=c.id left join item d ' +
         'ON a.id_item = d.id left join negara e ON a.id_negara = e.id left join provinsi f ' +
-        'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama_kelompok = '+String(nama_data4)+') as seluruh '  
-        , function (error, results, fields) {
+        'ON a.id_provinsi = f.id left join kota g ON a.id_kota = g.id WHERE b.nama_kelompok = '+String(nama_data4)+') as seluruh ' 
+         , function (error, results, fields) {
 
             if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null})); 
@@ -247,7 +263,11 @@ router.get('/', function(req, res, next) {
                     console.error(err);
                 }           
             }
-        });  
+        });
+      
+        
+
+
     
     }   
 
