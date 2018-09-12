@@ -1,9 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
-var DataFrame = require('dataframe-js').DataFrame;
-var dataForge = require('data-forge');
-
 
 router.get('/', function(req, res, next) {
 
@@ -98,53 +94,18 @@ router.get('/', function(req, res, next) {
 
                         var tampung_sumber = []
                         var hasil_split = df[10].split(",")
-                        for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(hasil_split[0])}
-                        
-
-                        var lf = new dataForge.DataFrame({
-                            columns: {
-                                Nama_Data: tampung_nama_data,
-                                Waktu: tampung_x,
-                                Nilai: tampung_y,
-                                Nama_Produk: tampung_nama_produk,
-                                Item: tampung_item,
-                                Negara: tampung_negara,
-                                Provinsi: tampung_provinsi,
-                                Kota: tampung_kota,
-                                Satuan: tampung_satuan,
-                                Sumber: tampung_sumber,
-                            },
-                        });
-
-                        tampung_sementara.push(lf)
+                        for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(hasil_split[0])}        
                     }
 
-                    var df0 = new dataForge.DataFrame({
-                        columns: {
-                            Nama_Data: [],
-                            Waktu: [],
-                            Nilai: [],
-                            Nama_Produk: [],
-                            Item: [],
-                            Negara: [],
-                            Provinsi: [],
-                            Kota: [],
-                            Satuan: [],
-                            Sumber: [],
-                        },
-                    });
-
-
-                    var haha = df0.concat(tampung_sementara)
-                    var lala = haha.toCSV()
-
-                    fs.writeFile('databoks.csv', lala, function(err) {
-                        if (err) throw err;
-                        res.download('databoks.csv');
-                    });
-    
-                } 
                 
+
+
+
+
+
+
+
+                }   
                 catch (err) {
                     console.error(err);
                 }           
@@ -153,7 +114,7 @@ router.get('/', function(req, res, next) {
     }
 
     else{
-        
+
         var nama_data2 = datax;
         var nama_data3 = nama_data2.split("-").join(" ")
         var nama_data4 = String("'"+nama_data3+"'")
@@ -174,6 +135,7 @@ router.get('/', function(req, res, next) {
                 
                 try {
                     var tampung_sementara = []
+                    var kumpulanx = []
                     for(var aa = 0; aa < results.length; aa++){   
                     
                         df = Object.values(results[aa])
@@ -215,50 +177,29 @@ router.get('/', function(req, res, next) {
                         var tampung_sumber = []
                         var hasil_split = df[10].split(",")
                         for(var t = 0; t < data_x1.length; t++){tampung_sumber.push(hasil_split[0])}
-                        
 
-                        var lf = new dataForge.DataFrame({
-                            columns: {
-                                Nama_Data: tampung_nama_data,
-                                Waktu: tampung_x,
-                                Nilai: tampung_y,
-                                Nama_Produk: tampung_nama_produk,
-                                Item: tampung_item,
-                                Negara: tampung_negara,
-                                Provinsi: tampung_provinsi,
-                                Kota: tampung_kota,
-                                Satuan: tampung_satuan,
-                                Sumber: tampung_sumber,
-                            },
-                        });
+                        kumpulan = {}
+                        for (var v = 0; v < tampung_nama_data.length; v++){
+                        kumpulan["Nama Data"] = tampung_nama_data[v]
+                        kumpulan["Nama Produk"] = tampung_nama_produk[v]
+                        kumpulan["Item"] = tampung_item[v]
+                        kumpulan["Negara"] = tampung_negara[v]
+                        kumpulan["Provinsi"] = tampung_provinsi[v]
+                        kumpulan["Kota"] = tampung_kota[v]
+                        kumpulan["Satuan"] = tampung_satuan[v]
+                        kumpulan["Sumber"] = tampung_sumber[v]
+                        kumpulan["Waktu"] = tampung_x[v]
+                        kumpulan["Nilai"] = tampung_y[v]
+                        kumpulanx.push(kumpulan)
+                        kumpulan = {}
+                        }
 
-                        tampung_sementara.push(lf)
                     }
 
-                    var df0 = new dataForge.DataFrame({
-                        columns: {
-                            Nama_Data: [],
-                            Waktu: [],
-                            Nilai: [],
-                            Nama_Produk: [],
-                            Item: [],
-                            Negara: [],
-                            Provinsi: [],
-                            Kota: [],
-                            Satuan: [],
-                            Sumber: [],
-                        },
-                    });
 
 
-                    var haha = df0.concat(tampung_sementara)
-                    var lala = haha.toCSV()
 
-                    fs.writeFile('databoks.csv', lala, function(err) {
-                        if (err) throw err;
-                        res.download('databoks.csv');
-                    });
-    
+                res.send(JSON.stringify({"Result": kumpulanx}));
                 } 
                 
                 catch (err) {
@@ -271,7 +212,10 @@ router.get('/', function(req, res, next) {
 
 
     
-    }   
+    }     
+
+
+
 
 
 

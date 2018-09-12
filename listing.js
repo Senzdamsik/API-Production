@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 // let url ="http://localhost:3000/download/";
 // let url ="http://192.168.100.5:3000/download/";; Rumah
-var url ="http://192.168.88.135:3000/download/"
+var url ="http://192.168.88.135:3000/download?data="
 // var url ="http://192.168.1.8:3000/download/"
 // var url ="http://192.168.1.8:3000/download/"; Kosan
 // let url ="http://open.katadata.co.id:3000/download/"; Server
@@ -158,7 +158,7 @@ router.get('/:awal', function(req, res, next) {
 			}
 
 
-			lanjut = "http://192.168.88.135:3000/users/"+String(parseInt(awalx)+20)
+			lanjut = "http://192.168.88.135:3000/listing/"+String(parseInt(awalx)+20)
 
 			res.send(JSON.stringify({"Response": kumpulan, "Next": lanjut}));
 

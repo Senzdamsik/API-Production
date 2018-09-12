@@ -2,8 +2,10 @@ var express = require('express')
 var app = express()
 var mysql= require('mysql');
 
-var users = require('./users');
+var listing = require('./listing');
 var download = require("./download")
+var json = require("./json")
+
 
 app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
@@ -16,8 +18,10 @@ app.use(function(req, res, next){
 	next();
 });
 
-app.use('/users', users);
+app.use('/listing', listing);
 app.use("/download", download);
+app.use("/json", json);
+
 
 
 app.listen(3000)
